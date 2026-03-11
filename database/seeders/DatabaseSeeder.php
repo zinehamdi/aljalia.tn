@@ -87,7 +87,7 @@ class DatabaseSeeder extends Seeder
         $categories = [
             ['name' => 'طيّب تونسي (هريسة، كسكسي...)', 'slug' => 'tunisian-food', 'icon' => 'utensils', 'order' => 1],
             ['name' => 'وين نركشو (قهاوي وشيشة)', 'slug' => 'cafes', 'icon' => 'coffee', 'order' => 2],
-            ['name' => 'نحب نتعرّف (صحاب وخلطة)', 'slug' => 'social', 'icon' => 'users', 'order' => 3],
+            ['name' => 'نحب نتعرف (صحبة/عرس)', 'slug' => 'social', 'icon' => 'users', 'order' => 3],
             ['name' => 'شوفلي حل (أوراق وإقامة)', 'slug' => 'legal', 'icon' => 'file-text', 'order' => 4],
             ['name' => 'الديوانة والـ FCR', 'slug' => 'diwana-fcr', 'icon' => 'car', 'order' => 5],
             ['name' => 'فزعة (مساعدة عاجلة)', 'slug' => 'help', 'icon' => 'life-buoy', 'order' => 6],

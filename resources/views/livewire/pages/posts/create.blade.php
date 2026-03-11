@@ -32,7 +32,10 @@ new class extends Component {
 
     public function mount()
     {
-        $this->categories = Category::where('is_active', true)->orderBy('order')->get();
+        $this->categories = Category::where('is_active', true)
+            ->where('slug', '!=', 'e-souq')
+            ->orderBy('order')
+            ->get();
 
         if (request()->has('category_id')) {
             $this->category_id = request()->query('category_id');
@@ -57,7 +60,7 @@ new class extends Component {
             $moderator = app(ImageModerator::class);
             // Content Moderation check
             if ($moderator && !$moderator->isSafe($this->image->getRealPath())) {
-                $this->addError('image', 'هذه الصورة تحتوي على محتوى غير لائق. يرجى احترام القوانين.');
+                $this->addError('image', __('This image contains inappropriate content. Please respect the laws.'));
                 return;
             }
 

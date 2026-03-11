@@ -43,6 +43,18 @@ Route::middleware(['auth'])->group(function () {
             ->middleware(['verified'])
             ->name('places.create');
 
+        Volt::route('esouq', 'pages.esouq.index')
+            ->middleware(['verified'])
+            ->name('esouq.index');
+
+        Volt::route('esouq/create', 'pages.esouq.create')
+            ->middleware(['verified'])
+            ->name('esouq.create');
+
+        Volt::route('esouq/{product}', 'pages.esouq.show')
+            ->middleware(['verified'])
+            ->name('esouq.show');
+
         Volt::route('messages', 'pages.messages.index')
             ->middleware(['verified'])
             ->name('messages.index');

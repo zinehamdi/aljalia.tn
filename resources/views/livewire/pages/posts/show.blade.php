@@ -89,8 +89,8 @@ new class extends Component {
     <x-slot name="header">
         <div class="flex items-center gap-3 w-full">
             <a href="javascript:history.back()" class="text-white hover:text-red-200">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                <svg class="w-6 h-6 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
             </a>
             <div>
@@ -131,7 +131,7 @@ new class extends Component {
                 </div>
 
                 <!-- Main Content -->
-                <div class="flex-1 text-right" dir="rtl">
+                <div class="flex-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
                     <div class="flex items-center gap-2 mb-3">
                         @if($post->user->avatar_url)
                             <img src="{{ asset('storage/' . $post->user->avatar_url) }}"
@@ -196,14 +196,14 @@ new class extends Component {
 
         <!-- Comments Section -->
         <div class="p-4 mt-2">
-            <h3 class="font-bold text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-4 text-right">
+            <h3 class="font-bold text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-4 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                 {{ __('Comments') }} ({{ $post->comments->count() }})
             </h3>
 
             <div class="space-y-4 mb-6">
                 @forelse($post->comments as $comment)
                     <div wire:key="comment-{{ $comment->id }}"
-                        class="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex gap-3 text-right" dir="rtl">
+                        class="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex gap-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
                         @php
                             $userCommentVote = $comment->votes()->where('user_id', Auth::id())->first()?->value;
                         @endphp
@@ -245,19 +245,19 @@ new class extends Component {
 
             <!-- Add Comment Form -->
             <form wire:submit.prevent="addComment"
-                class="bg-white border text-right border-gray-200 rounded-2xl p-4 shadow-sm sticky bottom-20 z-40">
+                class="bg-white border {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }} border-gray-200 rounded-2xl p-4 shadow-sm sticky bottom-20 z-40">
                 <textarea wire:model="newComment" rows="2"
                     placeholder="{{ __('Write your comment here... (Respect others)') }}"
-                    class="w-full text-right rounded-xl border-gray-300 shadow-sm focus:border-aljalia-red focus:ring focus:ring-red-200 focus:ring-opacity-50 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-sm px-4 py-3 bg-gray-50 resize-none mb-3"></textarea>
+                    class="w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }} rounded-xl border-gray-300 shadow-sm focus:border-aljalia-red focus:ring focus:ring-red-200 focus:ring-opacity-50 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-sm px-4 py-3 bg-gray-50 resize-none mb-3"></textarea>
                 @error('newComment') <span
                     class="text-xs text-red-500 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} block mb-2">{{ $message }}</span>
                 @enderror
-                <div class="flex justify-start pr-2">
+                <div class="flex {{ app()->getLocale() == 'ar' ? 'justify-start pr-2' : 'justify-end pl-2' }}">
                     <button type="submit"
                         class="bg-aljalia-red text-white font-bold py-2 px-6 rounded-xl shadow-md hover:bg-red-800 transition-colors {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-sm flex justify-center items-center gap-2">
                         <span wire:loading.remove wire:target="addComment">{{ __('Send') }}</span>
                         <span wire:loading wire:target="addComment">{{ __('Wait a moment...') }}</span>
-                        <svg wire:loading.remove wire:target="addComment" class="w-4 h-4" fill="none"
+                        <svg wire:loading.remove wire:target="addComment" class="w-4 h-4 {{ app()->getLocale() == 'ar' ? '' : 'rotate-180' }}" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>

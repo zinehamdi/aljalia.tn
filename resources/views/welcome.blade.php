@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <title>{{ config('app.name', 'الجالية.tn') }} - دليلك وعايلتك في الغربة</title>
+    <title>{{ config('app.name', 'الجالية.tn') }} - {{ __('Aljalia.tn - Your guide and family abroad') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,24 +35,26 @@
                 </div>
             </div>
 
-            <h1 class="text-4xl font-black text-white font-arabic mb-3 text-center drop-shadow-md tracking-tight">
+            <h1 class="text-4xl font-black text-white {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-3 text-center drop-shadow-md tracking-tight">
                 الجالية<span class="text-red-200">.tn</span>
             </h1>
-            <p class="text-red-100 font-arabic text-lg text-center mb-12 drop-shadow">
-                دليلك وعايلتك في الغربة
+            <p class="text-red-100 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-lg text-center mb-12 drop-shadow">
+                {{ __('Aljalia.tn - Your guide and family abroad') }}
             </p>
 
             <div class="w-full bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-                <h2 class="text-gray-800 text-xl font-bold font-arabic mb-2 text-center">مرحباً بيك في دارك!</h2>
-                <p class="text-gray-500 text-sm font-arabic mb-8 text-center leading-relaxed">
-                    منصة توانسة البرا، اسأل، جاوب، بيع، واشري... وتعرف على ولاد بلادك في حومتك الجديدة.
+                <h2 class="text-gray-800 text-xl font-bold {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-2 text-center">
+                    {{ __('Welcome to your home!') }}
+                </h2>
+                <p class="text-gray-500 text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-8 text-center leading-relaxed">
+                    {{ __('Tunisians platform abroad, ask, answer, sell, buy... and meet your country brothers in your new neighborhood.') }}
                 </p>
 
                 <div class="space-y-4">
                     @auth
                         <a href="{{ route('dashboard') }}"
-                            class="w-full bg-aljalia-red text-white font-bold py-4 px-4 rounded-2xl shadow-lg shadow-red-200 hover:bg-red-800 hover:-translate-y-1 transition-all duration-200 font-arabic text-lg flex justify-center items-center gap-2">
-                            ادخل للحومة مباشرة
+                            class="w-full bg-aljalia-red text-white font-bold py-4 px-4 rounded-2xl shadow-lg shadow-red-200 hover:bg-red-800 hover:-translate-y-1 transition-all duration-200 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-lg flex justify-center items-center gap-2">
+                            {{ __('Enter neighborhood directly') }}
                             <svg class="w-5 h-5 rtl:scale-x-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -61,8 +63,8 @@
                         </a>
                     @else
                         <a href="{{ route('register') }}"
-                            class="w-full bg-aljalia-red text-white font-bold py-4 px-4 rounded-2xl shadow-lg shadow-red-200 hover:bg-red-800 hover:-translate-y-1 transition-all duration-200 font-arabic text-lg flex justify-center items-center gap-2 group">
-                            حساب جديد
+                            class="w-full bg-aljalia-red text-white font-bold py-4 px-4 rounded-2xl shadow-lg shadow-red-200 hover:bg-red-800 hover:-translate-y-1 transition-all duration-200 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-lg flex justify-center items-center gap-2 group">
+                            {{ __('New Account') }}
                             <svg class="w-5 h-5 rtl:group-hover:-translate-x-1 transition-transform" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -72,20 +74,22 @@
 
                         <div class="relative flex py-2 items-center">
                             <div class="flex-grow border-t border-gray-200"></div>
-                            <span class="flex-shrink-0 mx-4 text-gray-400 text-xs font-arabic">عندك حساب ديجا؟</span>
+                            <span class="flex-shrink-0 mx-4 text-gray-400 text-xs {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">
+                                {{ __('Already have an account?') }}
+                            </span>
                             <div class="flex-grow border-t border-gray-200"></div>
                         </div>
 
                         <a href="{{ route('login') }}"
-                            class="w-full bg-gray-50 text-gray-800 border-2 border-gray-200 font-bold py-4 px-4 rounded-2xl hover:bg-gray-100 hover:border-gray-300 transition-all font-arabic text-lg flex justify-center items-center">
-                            تسجيل الدخول
+                            class="w-full bg-gray-50 text-gray-800 border-2 border-gray-200 font-bold py-4 px-4 rounded-2xl hover:bg-gray-100 hover:border-gray-300 transition-all {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-lg flex justify-center items-center">
+                            {{ __('Login') }}
                         </a>
                     @endauth
                 </div>
             </div>
 
-            <div class="mt-8 text-center text-gray-400 text-xs font-arabic">
-                &copy; {{ date('Y') }} الجالية.tn. جميع الحقوق محفوظة.
+            <div class="mt-8 text-center text-gray-400 text-[10px] {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">
+                &copy; {{ date('Y') }} {{ config('app.name') }}. {{ __('All rights reserved.') }}
             </div>
         </main>
     </div>

@@ -14,6 +14,11 @@ new class extends Component {
 
     public function mount(Category $category)
     {
+        // E-Souq has its own dedicated marketplace page
+        if ($category->slug === 'e-souq') {
+            return redirect()->route('esouq.index');
+        }
+
         $this->category = $category;
     }
 

@@ -47,13 +47,13 @@ new class extends Component {
             </div>
             <div>
                 <h2
-                    class="font-bold text-lg {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight text-right">
+                    class="font-bold text-lg {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                     {{ __('Neighborhood') }} - {{ Auth::user()->country->name ?? 'تونس' }}
                     @if(Auth::user()->city)
                         <span class="text-sm font-normal opacity-90">({{ Auth::user()->city->name }})</span>
                     @endif
                 </h2>
-                <p class="text-xs text-red-100 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-right">
+                <p class="text-xs text-red-100 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                     {{ __('Welcome') }}, {{ explode(' ', Auth::user()->name)[0] }}!
                 </p>
             </div>
@@ -63,10 +63,10 @@ new class extends Component {
     <div class="py-6 px-4">
         <!-- Quick Call to Action -->
         <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl p-5 mb-8 shadow-lg text-white">
-            <h3 class="font-bold text-xl mb-1 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-right">
+            <h3 class="font-bold text-xl mb-1 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                 {{ __('Have a question or want to help?') }}
             </h3>
-            <p class="text-sm opacity-90 mb-4 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-right">
+            <p class="text-sm opacity-90 mb-4 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                 {{ __('Ask or share your experience') }}
             </p>
             <a href="{{ route('posts.create') }}" wire:navigate
@@ -80,7 +80,7 @@ new class extends Component {
 
         <!-- The Grid (الحومة) -->
         <h3
-            class="text-gray-700 font-bold text-lg mb-4 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} px-1 text-right">
+            class="text-gray-700 font-bold text-lg mb-4 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} px-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
             {{ __("What's happening in the neighborhood?") }}
         </h3>
 
@@ -157,14 +157,14 @@ new class extends Component {
         <!-- Recent Posts Section -->
         <div class="mt-8">
             <h3
-                class="text-gray-700 font-bold text-lg mb-4 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} px-1 text-right">
+                class="text-gray-700 font-bold text-lg mb-4 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} px-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                 {{ __("Recent in the Neighborhood") }}
             </h3>
 
             <div class="space-y-4">
                 @foreach($recentPosts as $post)
                     <a wire:key="recent-post-{{ $post->id }}" href="{{ route('posts.show', $post) }}" wire:navigate
-                        class="block bg-white rounded-xl shadow-sm border border-gray-100 p-4 active:scale-95 transition-transform text-right"
+                        class="block bg-white rounded-xl shadow-sm border border-gray-100 p-4 active:scale-95 transition-transform {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}"
                         dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
                         <div class="flex justify-between items-start mb-3">
                             <div class="flex items-center gap-2">
@@ -215,8 +215,8 @@ new class extends Component {
                 </svg>
             </div>
             <div>
-                <h4 class="font-bold text-blue-900 text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-right">{{ __('Always take care!') }}</h4>
-                <p class="text-xs text-blue-700 mt-1 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-relaxed text-right">
+                <h4 class="font-bold text-blue-900 text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('Always take care!') }}</h4>
+                <p class="text-xs text-blue-700 mt-1 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-relaxed {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                     {{ __('The advice here comes from the experiences of Tunisians and is not necessarily official legal information. Always check the consulate website for more confirmation!') }}
                 </p>
             </div>

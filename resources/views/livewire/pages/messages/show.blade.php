@@ -104,7 +104,7 @@ new class extends Component {
                 <div wire:key="msg-{{ $message->id }}"
                     class="flex {{ app()->getLocale() == 'ar' ? 'justify-start' : 'justify-end' }}">
                     <div
-                        class="bg-aljalia-red text-white rounded-2xl {{ app()->getLocale() == 'ar' ? 'rounded-tr-sm' : 'rounded-tl-sm' }} px-4 py-2.5 max-w-[80%] shadow-sm relative group">
+                        class="bg-aljalia-red text-white rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[80%] shadow-sm relative group">
                         <p
                             class="text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} whitespace-pre-line leading-relaxed {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                             {{ $message->body }}
@@ -125,7 +125,7 @@ new class extends Component {
                 <div wire:key="msg-{{ $message->id }}"
                     class="flex {{ app()->getLocale() == 'ar' ? 'justify-end' : 'justify-start' }}">
                     <div
-                        class="bg-white text-gray-800 border border-gray-100 rounded-2xl {{ app()->getLocale() == 'ar' ? 'rounded-tl-sm' : 'rounded-tr-sm' }} px-4 py-2.5 max-w-[80%] shadow-sm">
+                        class="bg-white text-gray-800 border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%] shadow-sm">
                         <p
                             class="text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} whitespace-pre-line leading-relaxed {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                             {{ $message->body }}

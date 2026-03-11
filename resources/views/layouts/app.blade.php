@@ -161,17 +161,7 @@
                         {{ __('Install App') }} (iPhone)</h4>
                 </div>
                 <p class="text-xs text-gray-600 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-relaxed">
-                    @if(app()->getLocale() == 'ar')
-                        اضغط على زر <span class="bg-gray-100 px-1 rounded font-bold">Share</span> لوطة، وبعد اختار <span
-                            class="bg-gray-100 px-1 rounded font-bold">Add to Home Screen</span> باش تهبط التطبيق!
-                    @elseif(app()->getLocale() == 'fr')
-                        Appuyez sur le bouton <span class="bg-gray-100 px-1 rounded font-bold">Partager</span> en bas, puis
-                        choisissez <span class="bg-gray-100 px-1 rounded font-bold">Sur l'écran d'accueil</span> pour
-                        installer !
-                    @else
-                        Press the <span class="bg-gray-100 px-1 rounded font-bold">Share</span> button below, then choose
-                        <span class="bg-gray-100 px-1 rounded font-bold">Add to Home Screen</span> to install!
-                    @endif
+                    {!! __('ios_install_tip') !!}
                 </p>
             </div>
         </div>
