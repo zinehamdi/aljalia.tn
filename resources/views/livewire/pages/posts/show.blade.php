@@ -94,8 +94,8 @@ new class extends Component {
                 </svg>
             </a>
             <div>
-                <h2 class="font-bold text-lg font-arabic leading-tight">
-                    {{ $post->category->name }}
+                <h2 class="font-bold text-lg {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight">
+                    {{ __($post->category->name) }}
                 </h2>
             </div>
         </div>
@@ -133,29 +133,47 @@ new class extends Component {
                 <!-- Main Content -->
                 <div class="flex-1 text-right" dir="rtl">
                     <div class="flex items-center gap-2 mb-3">
-                        <div
-                            class="w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-lg">
-                            {{ mb_substr($post->user->name, 0, 1) }}
-                        </div>
-                        <div class="text-right">
-                            <h4 class="font-bold text-gray-900 font-arabic">{{ $post->user->name }}</h4>
-                            <span class="text-[11px] text-gray-500 font-arabic">{{ $post->created_at->diffForHumans() }}
+                        @if($post->user->avatar_url)
+                            <img src="{{ asset('storage/' . $post->user->avatar_url) }}"
+                                class="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm shrink-0">
+                        @else
+                            <div
+                                class="w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-lg">
+                                {{ mb_substr($post->user->name, 0, 1) }}
+                            </div>
+                        @endif
+                        <div class="{{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                            <h4 class="font-bold text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">
+                                {{ $post->user->name }}
+                            </h4>
+                            <span
+                                class="text-[11px] text-gray-500 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ $post->created_at->diffForHumans() }}
                                 @if($post->city) • {{ $post->city->name }} @endif</span>
                         </div>
                         @if($post->type == 'guide')
                             <span
-                                class="mr-auto bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider font-arabic">دليل</span>
+                                class="mr-auto bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ __('Guide') }}</span>
                         @elseif($post->type == 'help')
                             <span
-                                class="mr-auto bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider font-arabic">مساعدة</span>
-                        @elseif($post->type == 'esouq')
+                                class="mr-auto bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ __('Help') }}</span>
+                        @elseif($post->type == 'esouq' || $post->type == 'marketplace')
                             <span
-                                class="mr-auto bg-green-100 text-green-800 text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider font-arabic">إي-سوق</span>
+                                class="mr-auto bg-green-100 text-green-800 text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ __('E-Souq') }}</span>
                         @endif
                     </div>
 
-                    <h1 class="text-xl font-bold text-gray-900 font-arabic mb-3 leading-snug">{{ $post->title }}</h1>
-                    <div class="text-gray-800 font-arabic text-md leading-relaxed whitespace-pre-line">
+                    <h1
+                        class="text-xl font-bold text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-3 leading-snug">
+                        {{ $post->title }}
+                    </h1>
+
+                    @if($post->image_url)
+                        <div class="mb-4 rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+                            <img src="{{ asset('storage/' . $post->image_url) }}" class="w-full object-cover max-h-96">
+                        </div>
+                    @endif
+                    <div
+                        class="text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-md leading-relaxed whitespace-pre-line">
                         {{ $post->content }}
                     </div>
                 </div>
@@ -165,20 +183,21 @@ new class extends Component {
         @if($post->user_id != Auth::id())
             <div class="px-5 py-3 bg-gray-50 border-b border-gray-100">
                 <button wire:click="messageUser"
-                    class="w-full bg-white text-gray-700 font-bold py-2.5 px-4 rounded-xl text-sm font-arabic shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors flex justify-center items-center gap-2">
+                    class="w-full bg-white text-gray-700 font-bold py-2.5 px-4 rounded-xl text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors flex justify-center items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
                         </path>
                     </svg>
-                    راسل {{ explode(' ', $post->user->name)[0] }} على الخاص
+                    {{ __('Send message to') }} {{ explode(' ', $post->user->name)[0] }} {{ __('Private message') }}
                 </button>
             </div>
         @endif
 
         <!-- Comments Section -->
         <div class="p-4 mt-2">
-            <h3 class="font-bold text-gray-800 font-arabic mb-4 text-right">التعليقات ({{ $post->comments->count() }})
+            <h3 class="font-bold text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-4 text-right">
+                {{ __('Comments') }} ({{ $post->comments->count() }})
             </h3>
 
             <div class="space-y-4 mb-6">
@@ -207,31 +226,37 @@ new class extends Component {
                         </div>
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="font-bold text-sm text-gray-900 font-arabic">{{ $comment->user->name }}</span>
+                                <span
+                                    class="font-bold text-sm text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ $comment->user->name }}</span>
                                 <span class="text-[10px] text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
                             </div>
-                            <p class="text-sm text-gray-800 font-arabic whitespace-pre-line leading-relaxed">
+                            <p
+                                class="text-sm text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} whitespace-pre-line leading-relaxed">
                                 {{ $comment->content }}
                             </p>
                         </div>
                     </div>
                 @empty
-                    <p class="text-gray-500 text-center font-arabic text-sm py-4">كون أول من يعلق!</p>
+                    <p class="text-gray-500 text-center {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-sm py-4">
+                        {{ __('Be the first to comment!') }}
+                    </p>
                 @endforelse
             </div>
 
             <!-- Add Comment Form -->
             <form wire:submit.prevent="addComment"
                 class="bg-white border text-right border-gray-200 rounded-2xl p-4 shadow-sm sticky bottom-20 z-40">
-                <textarea wire:model="newComment" rows="2" placeholder="اكتب تعليقك هوني... (احترم وخيانك)"
-                    class="w-full text-right rounded-xl border-gray-300 shadow-sm focus:border-aljalia-red focus:ring focus:ring-red-200 focus:ring-opacity-50 font-arabic text-sm px-4 py-3 bg-gray-50 resize-none mb-3"></textarea>
-                @error('newComment') <span class="text-xs text-red-500 font-arabic block mb-2">{{ $message }}</span>
+                <textarea wire:model="newComment" rows="2"
+                    placeholder="{{ __('Write your comment here... (Respect others)') }}"
+                    class="w-full text-right rounded-xl border-gray-300 shadow-sm focus:border-aljalia-red focus:ring focus:ring-red-200 focus:ring-opacity-50 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-sm px-4 py-3 bg-gray-50 resize-none mb-3"></textarea>
+                @error('newComment') <span
+                    class="text-xs text-red-500 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} block mb-2">{{ $message }}</span>
                 @enderror
                 <div class="flex justify-start pr-2">
                     <button type="submit"
-                        class="bg-aljalia-red text-white font-bold py-2 px-6 rounded-xl shadow-md hover:bg-red-800 transition-colors font-arabic text-sm flex justify-center items-center gap-2">
-                        <span wire:loading.remove wire:target="addComment">أرسل</span>
-                        <span wire:loading wire:target="addComment">...</span>
+                        class="bg-aljalia-red text-white font-bold py-2 px-6 rounded-xl shadow-md hover:bg-red-800 transition-colors {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-sm flex justify-center items-center gap-2">
+                        <span wire:loading.remove wire:target="addComment">{{ __('Send') }}</span>
+                        <span wire:loading wire:target="addComment">{{ __('Wait a moment...') }}</span>
                         <svg wire:loading.remove wire:target="addComment" class="w-4 h-4" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

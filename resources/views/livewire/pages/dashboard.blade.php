@@ -19,8 +19,14 @@ new class extends Component {
 
     public function with()
     {
+        $user = Auth::user();
         return [
-            'user' => Auth::user(),
+            'user' => $user,
+            'recentPosts' => \App\Models\Post::where('country_id', $user->country_id)
+                ->with(['user', 'city'])
+                ->latest()
+                ->take(5)
+                ->get(),
         ];
     }
 }; ?>
@@ -28,18 +34,27 @@ new class extends Component {
 <div>
     <x-slot name="header">
         <div class="flex items-center gap-3 w-full">
-            <div class="rounded-full bg-white text-aljalia-red p-2 shadow flex shrink-0 items-center justify-center">
-                <span class="text-xs uppercase font-bold">{{ Auth::user()->country->code ?? 'TN' }}</span>
+            <div class="flex-shrink-0">
+                @if(Auth::user()->avatar_url)
+                    <img src="{{ asset('storage/' . Auth::user()->avatar_url) }}"
+                        class="w-12 h-12 rounded-full border-2 border-white shadow-md object-cover">
+                @else
+                    <div
+                        class="w-12 h-12 rounded-full bg-white text-aljalia-red shadow flex shrink-0 items-center justify-center font-bold text-lg">
+                        {{ mb_substr(Auth::user()->name, 0, 1) }}
+                    </div>
+                @endif
             </div>
             <div>
-                <h2 class="font-bold text-lg font-arabic leading-tight text-right">
-                    الحومة - {{ Auth::user()->country->name ?? 'تونس' }}
+                <h2
+                    class="font-bold text-lg {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight text-right">
+                    {{ __('Neighborhood') }} - {{ Auth::user()->country->name ?? 'تونس' }}
                     @if(Auth::user()->city)
                         <span class="text-sm font-normal opacity-90">({{ Auth::user()->city->name }})</span>
                     @endif
                 </h2>
-                <p class="text-xs text-red-100 font-arabic text-right">مرحباً بيك،
-                    {{ explode(' ', Auth::user()->name)[0] }}!
+                <p class="text-xs text-red-100 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-right">
+                    {{ __('Welcome') }}, {{ explode(' ', Auth::user()->name)[0] }}!
                 </p>
             </div>
         </div>
@@ -48,19 +63,26 @@ new class extends Component {
     <div class="py-6 px-4">
         <!-- Quick Call to Action -->
         <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl p-5 mb-8 shadow-lg text-white">
-            <h3 class="font-bold text-xl mb-1 font-arabic text-right">عندك سؤال أو تحب تعاون؟</h3>
-            <p class="text-sm opacity-90 mb-4 font-arabic text-right">اسأل وإلا شارك خبرتك، توانسة لبعضنا!</p>
+            <h3 class="font-bold text-xl mb-1 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-right">
+                {{ __('Have a question or want to help?') }}
+            </h3>
+            <p class="text-sm opacity-90 mb-4 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-right">
+                {{ __('Ask or share your experience') }}
+            </p>
             <a href="{{ route('posts.create') }}" wire:navigate
-                class="bg-white text-aljalia-red font-bold px-4 py-2 rounded-lg text-sm w-full font-arabic shadow hover:bg-gray-50 flex justify-center items-center gap-2">
+                class="bg-white text-aljalia-red font-bold px-4 py-2 rounded-lg text-sm w-full {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} shadow hover:bg-gray-50 flex justify-center items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-                اكتب بوست جديد
+                {{ __('Write new post') }}
             </a>
         </div>
 
         <!-- The Grid (الحومة) -->
-        <h3 class="text-gray-700 font-bold text-lg mb-4 font-arabic px-1 text-right">اش فمة في الحومة؟</h3>
+        <h3
+            class="text-gray-700 font-bold text-lg mb-4 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} px-1 text-right">
+            {{ __("What's happening in the neighborhood?") }}
+        </h3>
 
         <div class="grid grid-cols-2 gap-4">
             @foreach($categories as $category)
@@ -98,7 +120,7 @@ new class extends Component {
                                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                                 </path>
                             </svg>
-                        @elseif($category->icon == 'car')
+@elseif($category->icon == 'car')
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -124,11 +146,67 @@ new class extends Component {
                         @endif
                     </div>
 
-                    <h4 class="font-bold text-gray-800 text-[13px] font-arabic z-10 leading-snug">{{ $category->name }}</h4>
+                    <h4
+                        class="font-bold text-gray-800 text-[13px] {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} z-10 leading-snug">
+                        {{ __($category->name) }}
+                    </h4>
                 </a>
             @endforeach
         </div>
 
+        <!-- Recent Posts Section -->
+        <div class="mt-8">
+            <h3
+                class="text-gray-700 font-bold text-lg mb-4 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} px-1 text-right">
+                {{ __("Recent in the Neighborhood") }}
+            </h3>
+
+            <div class="space-y-4">
+                @foreach($recentPosts as $post)
+                    <a wire:key="recent-post-{{ $post->id }}" href="{{ route('posts.show', $post) }}" wire:navigate
+                        class="block bg-white rounded-xl shadow-sm border border-gray-100 p-4 active:scale-95 transition-transform text-right"
+                        dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-2">
+                                @if($post->user->avatar_url)
+                                    <img src="{{ asset('storage/' . $post->user->avatar_url) }}"
+                                        class="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm shrink-0">
+                                @else
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center font-bold text-sm shrink-0 border border-gray-100">
+                                        {{ mb_substr($post->user->name, 0, 1) }}
+                                    </div>
+                                @endif
+                                <div class="{{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                                    <h4 class="font-bold text-sm text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight">
+                                        {{ $post->user->name }}</h4>
+                                    <span class="text-[10px] text-gray-500">{{ $post->created_at->diffForHumans() }}
+                                        @if($post->city) • {{ $post->city->name }} @endif</span>
+                                </div>
+                            </div>
+                            <span
+                                class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">
+                                {{ __(ucfirst($post->type)) }}
+                            </span>
+                        </div>
+
+                        <h3 class="font-bold text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-1 leading-tight text-lg">{{ $post->title }}</h3>
+                        
+                        @if($post->image_url)
+                            <div class="my-3 rounded-xl overflow-hidden border border-gray-50 h-32 w-full">
+                                <img src="{{ asset('storage/' . $post->image_url) }}" class="w-full h-full object-cover">
+                            </div>
+                        @endif
+
+                        <p class="text-gray-600 text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} line-clamp-2 leading-relaxed opacity-90">
+                            {{ $post->content }}
+                        </p>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Safety Warning -->
         <div class="mt-8 bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
             <div class="text-blue-500 mt-1">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,10 +215,9 @@ new class extends Component {
                 </svg>
             </div>
             <div>
-                <h4 class="font-bold text-blue-900 text-sm font-arabic text-right">ديما خوذ حذرك!</h4>
-                <p class="text-xs text-blue-700 mt-1 font-arabic leading-relaxed text-right">
-                    النصائح الموجودة هوني جات من تجارب التوانسة ومش بالضرورة معلومات قانونية رسمية. ثبت ديما في موقع
-                    القنصلية لمزيد التأكيد!
+                <h4 class="font-bold text-blue-900 text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} text-right">{{ __('Always take care!') }}</h4>
+                <p class="text-xs text-blue-700 mt-1 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-relaxed text-right">
+                    {{ __('The advice here comes from the experiences of Tunisians and is not necessarily official legal information. Always check the consulate website for more confirmation!') }}
                 </p>
             </div>
         </div>

@@ -5,6 +5,13 @@ use Livewire\Volt\Volt;
 
 Route::view('/', 'welcome');
 
+Route::get('/lang/{locale}', function ($locale) {
+    if (in_array($locale, ['ar', 'en', 'fr'])) {
+        session()->put('locale', $locale);
+    }
+    return back();
+})->name('locale.switch');
+
 Route::middleware(['auth'])->group(function () {
     // Stage 1: "وصلنا" Onboarding Step
     Volt::route('/onboarding/country', 'pages.onboarding')
