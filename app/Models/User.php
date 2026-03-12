@@ -24,6 +24,7 @@ class User extends Authenticatable
         'country_id',
         'city_id',
         'avatar_url',
+        'role',
     ];
 
     /**
@@ -90,5 +91,20 @@ class User extends Authenticatable
         ->where('sender_id', '!=', $this->id)
         ->whereNull('read_at')
         ->count();
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'superadmin';
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array($this->role, ['admin', 'superadmin']);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

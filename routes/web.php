@@ -67,6 +67,20 @@ Route::middleware(['auth'])->group(function () {
             ->name('profile');
             
     });
+
+    // Admin Routes
+    Route::prefix('admin')->middleware(['admin'])->group(function () {
+        Volt::route('/', 'pages.admin.dashboard')->name('admin.dashboard');
+        Volt::route('/users', 'pages.admin.users')->name('admin.users');
+        Volt::route('/posts', 'pages.admin.posts')->name('admin.posts');
+        Volt::route('/products', 'pages.admin.products')->name('admin.products');
+        Volt::route('/places', 'pages.admin.places')->name('admin.places');
+
+        // SuperAdmin only
+        Volt::route('/admins', 'pages.admin.admins')
+            ->middleware('superadmin')
+            ->name('admin.admins');
+    });
 });
 
 require __DIR__.'/auth.php';

@@ -61,6 +61,21 @@ new class extends Component {
     </x-slot>
 
     <div class="py-6 px-4">
+        @if(Auth::user()->isAdmin())
+            <a href="{{ route('admin.dashboard') }}"
+                class="flex items-center justify-between bg-gray-900 text-white rounded-2xl p-4 mb-4 shadow-lg hover:bg-gray-800 transition group">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🛡️</span>
+                    <div>
+                        <span class="font-bold text-sm">{{ __('Admin Panel') }}</span>
+                        <span class="text-[10px] text-gray-400 block">{{ Auth::user()->isSuperAdmin() ? 'SuperAdmin' : 'Admin' }}</span>
+                    </div>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-white transition rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+        @endif
         <!-- Quick Call to Action -->
         <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl p-5 mb-8 shadow-lg text-white">
             <h3 class="font-bold text-xl mb-1 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
