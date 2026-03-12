@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -27,14 +26,14 @@ class DatabaseSeeder extends Seeder
             ['name' => 'سويسرا', 'code' => 'CH', 'icon' => '🇨🇭', 'continent' => 'europe', 'continent_ar' => 'أوروبا'],
             ['name' => 'النمسا', 'code' => 'AT', 'icon' => '🇦🇹', 'continent' => 'europe', 'continent_ar' => 'أوروبا'],
             ['name' => 'هولندا', 'code' => 'NL', 'icon' => '🇳🇱', 'continent' => 'europe', 'continent_ar' => 'أوروبا'],
-            
+
             // Gulf
             ['name' => 'السعودية', 'code' => 'SA', 'icon' => '🇸🇦', 'continent' => 'gulf', 'continent_ar' => 'الخليج'],
             ['name' => 'الإمارات', 'code' => 'AE', 'icon' => '🇦🇪', 'continent' => 'gulf', 'continent_ar' => 'الإمارات'],
             ['name' => 'قطر', 'code' => 'QA', 'icon' => '🇶🇦', 'continent' => 'gulf', 'continent_ar' => 'الخليج'],
             ['name' => 'الكويت', 'code' => 'KW', 'icon' => '🇰🇼', 'continent' => 'gulf', 'continent_ar' => 'الخليج'],
             ['name' => 'عمان', 'code' => 'OM', 'icon' => '🇴🇲', 'continent' => 'gulf', 'continent_ar' => 'الخليج'],
-            
+
             // North America
             ['name' => 'كندا', 'code' => 'CA', 'icon' => '🇨🇦', 'continent' => 'north_america', 'continent_ar' => 'أمريكا الشمالية'],
             ['name' => 'أمريكا', 'code' => 'US', 'icon' => '🇺🇸', 'continent' => 'north_america', 'continent_ar' => 'أمريكا الشمالية'],
@@ -42,7 +41,7 @@ class DatabaseSeeder extends Seeder
 
         foreach ($countries as $countryData) {
             $country = \App\Models\Country::create($countryData);
-            
+
             switch ($country->code) {
                 case 'FR':
                     $country->cities()->createMany([['name' => 'باريس'], ['name' => 'مارسيليا'], ['name' => 'ليون'], ['name' => 'نيس']]);

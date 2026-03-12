@@ -17,7 +17,7 @@ class EnsureCountryIsSelected
     {
         if ($request->user() && ! $request->user()->country_id) {
             // Ignore if the current route is the onboarding route or livewire internal routes
-            if (!$request->is('onboarding*') && !$request->is('livewire*')) {
+            if (! $request->is('onboarding*') && ! $request->is('livewire*')) {
                 return redirect()->route('onboarding.country');
             }
         }

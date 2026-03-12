@@ -34,9 +34,10 @@ class Product extends Model
 
     public function getFormattedPriceAttribute()
     {
-        if (!$this->price) {
+        if (! $this->price) {
             return null; // يتفاهم
         }
-        return number_format((float) $this->price, 2) . ' ' . $this->currency;
+
+        return number_format((float) $this->price, 2).' '.$this->currency;
     }
 }

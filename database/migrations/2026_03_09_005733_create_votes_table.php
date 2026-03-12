@@ -17,7 +17,7 @@ return new class extends Migration
             $table->morphs('votable');
             $table->tinyInteger('value'); // 1 = upvote, -1 = downvote
             $table->timestamps();
-            
+
             // A user can only vote once on a specific item
             $table->unique(['user_id', 'votable_id', 'votable_type']);
         });

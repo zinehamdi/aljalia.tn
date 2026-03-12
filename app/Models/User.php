@@ -86,11 +86,11 @@ class User extends Authenticatable
     {
         return Message::whereHas('conversation', function ($q) {
             $q->where('user_one_id', $this->id)
-              ->orWhere('user_two_id', $this->id);
+                ->orWhere('user_two_id', $this->id);
         })
-        ->where('sender_id', '!=', $this->id)
-        ->whereNull('read_at')
-        ->count();
+            ->where('sender_id', '!=', $this->id)
+            ->whereNull('read_at')
+            ->count();
     }
 
     public function isSuperAdmin(): bool

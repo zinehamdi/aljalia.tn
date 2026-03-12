@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Country;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Volt\Volt;
@@ -13,7 +14,15 @@ class ProfileTest extends TestCase
 
     public function test_profile_page_is_displayed(): void
     {
-        $user = User::factory()->create();
+        $country = Country::create([
+            'name' => 'Tunisia',
+            'code' => 'TN',
+            'is_active' => true,
+        ]);
+
+        $user = User::factory()->create([
+            'country_id' => $country->id,
+        ]);
 
         $response = $this->actingAs($user)->get('/profile');
 

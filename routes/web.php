@@ -9,6 +9,7 @@ Route::get('/lang/{locale}', function ($locale) {
     if (in_array($locale, ['ar', 'en', 'fr'])) {
         session()->put('locale', $locale);
     }
+
     return back();
 })->name('locale.switch');
 
@@ -18,7 +19,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('onboarding.country');
 
     Route::middleware([\App\Http\Middleware\EnsureCountryIsSelected::class])->group(function () {
-        
+
         Volt::route('dashboard', 'pages.dashboard')
             ->middleware(['verified'])
             ->name('dashboard');
@@ -69,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::view('profile', 'profile')
             ->name('profile');
-            
+
     });
 
     // Admin Routes

@@ -16,8 +16,8 @@ class CheckSessionIp
             $sessionIp = $request->session()->get('last_ip');
             $currentIp = $request->ip();
 
-            if ($sessionIp && !$this->isSameNetwork($sessionIp, $currentIp)) {
-                Log::info("Logging out user " . Auth::id() . " due to network change from $sessionIp to $currentIp");
+            if ($sessionIp && ! $this->isSameNetwork($sessionIp, $currentIp)) {
+                Log::info('Logging out user '.Auth::id()." due to network change from $sessionIp to $currentIp");
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
