@@ -189,5 +189,11 @@
 	"Delete this place?": "تمسح هالبلاصة؟",
 	"Remove admin privileges from this user?": "تنحي صلاحيات الأدمن من هالمستخدم؟",
 	"Make this user an admin?": "تعمل هالمستخدم أدمن؟",
-	"Admin Panel": "لوحة التحكم"
+	"Admin Panel": "لوحة التحكم",
+	"Edit": "تعديل",
+	"Delete": "حذف",
+	"Edit Post": "تعديل المنشور",
+	"Save Changes": "حفظ التعديلات",
+	"Add image (optional)": "زيد تصويرة (اختياري)",
+	"Are you sure you want to delete this post?": "متأكد تحب تمسح هالمنشور؟"
 }

@@ -189,5 +189,11 @@
 	"Delete this place?": "Delete this place?",
 	"Remove admin privileges from this user?": "Remove admin privileges from this user?",
 	"Make this user an admin?": "Make this user an admin?",
-	"Admin Panel": "Admin Panel"
+	"Admin Panel": "Admin Panel",
+	"Edit": "Edit",
+	"Delete": "Delete",
+	"Edit Post": "Edit Post",
+	"Save Changes": "Save Changes",
+	"Add image (optional)": "Add image (optional)",
+	"Are you sure you want to delete this post?": "Are you sure you want to delete this post?"
 }

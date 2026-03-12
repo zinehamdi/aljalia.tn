@@ -35,6 +35,10 @@ Route::middleware(['auth'])->group(function () {
             ->middleware(['verified'])
             ->name('posts.show');
 
+        Volt::route('posts/{post}/edit', 'pages.posts.edit')
+            ->middleware(['verified'])
+            ->name('posts.edit');
+
         Volt::route('places', 'pages.places.index')
             ->middleware(['verified'])
             ->name('places.index');

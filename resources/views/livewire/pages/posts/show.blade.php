@@ -83,6 +83,18 @@ new class extends Component {
 
         return redirect()->route('messages.show', $conversation);
     }
+
+    public function deletePost()
+    {
+        if ($this->post->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+            return;
+        }
+
+        $categorySlug = $this->post->category->slug;
+        $this->post->delete();
+
+        return redirect()->route('category.show', $categorySlug);
+    }
 }; ?>
 
 <div>
@@ -180,7 +192,20 @@ new class extends Component {
             </div>
         </div>
 
-        @if($post->user_id != Auth::id())
+        @if($post->user_id == Auth::id())
+            <!-- Owner Actions -->
+            <div class="px-5 py-3 bg-gray-50 border-b border-gray-100 flex gap-2">
+                <a href="{{ route('posts.edit', $post) }}" wire:navigate
+                    class="flex-1 bg-white text-gray-700 font-bold py-2.5 px-4 rounded-xl text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} shadow-sm border border-gray-200 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors flex justify-center items-center gap-2">
+                    ✏️ {{ __('Edit') }}
+                </a>
+                <button wire:click="deletePost"
+                    wire:confirm="{{ __('Are you sure you want to delete this post?') }}"
+                    class="bg-white text-red-500 font-bold py-2.5 px-4 rounded-xl text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} shadow-sm border border-gray-200 hover:bg-red-50 hover:border-red-300 transition-colors flex justify-center items-center gap-2">
+                    🗑️ {{ __('Delete') }}
+                </button>
+            </div>
+        @else
             <div class="px-5 py-3 bg-gray-50 border-b border-gray-100">
                 <button wire:click="messageUser"
                     class="w-full bg-white text-gray-700 font-bold py-2.5 px-4 rounded-xl text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors flex justify-center items-center gap-2">

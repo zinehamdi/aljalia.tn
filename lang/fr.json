@@ -189,5 +189,11 @@
 	"Delete this place?": "Supprimer ce lieu ?",
 	"Remove admin privileges from this user?": "Retirer les privilèges admin de cet utilisateur ?",
 	"Make this user an admin?": "Faire de cet utilisateur un admin ?",
-	"Admin Panel": "Panneau d'administration"
+	"Admin Panel": "Panneau d'administration",
+	"Edit": "Modifier",
+	"Delete": "Supprimer",
+	"Edit Post": "Modifier le post",
+	"Save Changes": "Enregistrer les modifications",
+	"Add image (optional)": "Ajouter une image (optionnel)",
+	"Are you sure you want to delete this post?": "Voulez-vous vraiment supprimer ce post ?"
 }
