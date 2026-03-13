@@ -5,8 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'الجالية.tn') }}</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>@yield('title', 'الجالية - Aljalia') | {{ __('Aljalia.tn - Your guide and family abroad') }}</title>
+    <meta name="description" content="{{ __('Tunisians platform abroad, ask, answer, sell, buy... and meet your country brothers in your new neighborhood.') }}">
+    <meta name="keywords" content="Aljalia, Jalia, aljalia.tn, الجالية, جالية, الجالية التونسية, تونسيون بالخارج, Tunisiens à l'étranger, Tunisians abroad, expats, Tunisia">
+    <meta name="author" content="Aljalia.tn">
+    <meta name="robots" content="index, follow">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
