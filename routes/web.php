@@ -85,6 +85,9 @@ Route::middleware(['auth'])->group(function () {
         Volt::route('/admins', 'pages.admin.admins')
             ->middleware('superadmin')
             ->name('admin.admins');
+        Volt::route('/settings', 'pages.admin.settings')
+            ->middleware('superadmin')
+            ->name('admin.settings');
     });
 });
 

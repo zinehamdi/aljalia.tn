@@ -1,9 +1,12 @@
 <?php
 
 use App\Models\User;
+use App\Models\Setting;
+use App\Mail\WelcomeNewUserMail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -28,7 +31,17 @@ new #[Layout('layouts.guest')] class extends Component
 
         $validated['password'] = Hash::make($validated['password']);
 
-        event(new Registered($user = User::create($validated)));
+        $user = User::create($validated);
+        event(new Registered($user));
+
+        try {
+            $notifyEmail = Setting::where('key', 'new_user_notification_email')->value('value');
+            if (!empty($notifyEmail)) {
+                Mail::to($notifyEmail)->send(new WelcomeNewUserMail($user));
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send new user email: ' . $e->getMessage());
+        }
 
         Auth::login($user);
 

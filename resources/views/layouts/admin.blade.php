@@ -47,6 +47,10 @@
                                     class="px-3 py-2 rounded-lg {{ request()->routeIs('admin.admins') ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }} transition">
                                     🛡️ {{ __('Admins') }}
                                 </a>
+                                <a href="{{ route('admin.settings') }}"
+                                    class="px-3 py-2 rounded-lg {{ request()->routeIs('admin.settings') ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }} transition">
+                                    ⚙️ {{ __('Settings') }}
+                                </a>
                             @endif
                         </div>
                     </div>
@@ -75,6 +79,8 @@
                 @if(Auth::user()->isSuperAdmin())
                     <a href="{{ route('admin.admins') }}"
                         class="px-3 py-1.5 rounded-lg whitespace-nowrap {{ request()->routeIs('admin.admins') ? 'bg-white/10 text-white' : 'text-gray-400' }}">🛡️</a>
+                    <a href="{{ route('admin.settings') }}"
+                        class="px-3 py-1.5 rounded-lg whitespace-nowrap {{ request()->routeIs('admin.settings') ? 'bg-white/10 text-white' : 'text-gray-400' }}">⚙️</a>
                 @endif
             </div>
         </nav>
