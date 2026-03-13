@@ -75,7 +75,7 @@ new class extends Component {
                 </thead>
                 <tbody class="divide-y divide-gray-50">
                     @foreach($users as $user)
-                        <tr class="hover:bg-gray-50/50 transition">
+                        <tr wire:key="user-{{ $user->id }}" class="hover:bg-gray-50/50 transition">
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-xs shrink-0">

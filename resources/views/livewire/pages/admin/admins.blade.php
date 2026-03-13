@@ -60,7 +60,7 @@ new class extends Component {
         <h3 class="font-bold text-gray-800 mb-4 text-lg">{{ __('Current Admins') }}</h3>
         <div class="space-y-3">
             @foreach($admins as $admin)
-                <div class="flex items-center justify-between py-3 px-4 rounded-xl {{ $admin->isSuperAdmin() ? 'bg-red-50 border border-red-100' : 'bg-blue-50 border border-blue-100' }}">
+                <div wire:key="admin-{{ $admin->id }}" class="flex items-center justify-between py-3 px-4 rounded-xl {{ $admin->isSuperAdmin() ? 'bg-red-50 border border-red-100' : 'bg-blue-50 border border-blue-100' }}">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full {{ $admin->isSuperAdmin() ? 'bg-red-200 text-red-700' : 'bg-blue-200 text-blue-700' }} flex items-center justify-center font-bold">
                             {{ mb_substr($admin->name, 0, 1) }}
@@ -99,7 +99,7 @@ new class extends Component {
         @if($search)
             <div class="space-y-2">
                 @forelse($regularUsers as $user)
-                    <div class="flex items-center justify-between py-3 px-4 rounded-xl bg-gray-50 border border-gray-100">
+                    <div wire:key="user-{{ $user->id }}" class="flex items-center justify-between py-3 px-4 rounded-xl bg-gray-50 border border-gray-100">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-sm">
                                 {{ mb_substr($user->name, 0, 1) }}

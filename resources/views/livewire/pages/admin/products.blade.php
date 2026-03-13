@@ -54,7 +54,7 @@ new class extends Component {
                 </thead>
                 <tbody class="divide-y divide-gray-50">
                     @foreach($products as $product)
-                        <tr class="hover:bg-gray-50/50 transition">
+                        <tr wire:key="product-{{ $product->id }}" class="hover:bg-gray-50/50 transition">
                             <td class="px-4 py-3 font-bold text-gray-900 max-w-[200px] truncate">{{ $product->name }}</td>
                             <td class="px-4 py-3 text-gray-500 text-xs">{{ $product->user->name }}</td>
                             <td class="px-4 py-3 text-sm font-bold {{ $product->price ? 'text-green-600' : 'text-gray-400' }}">

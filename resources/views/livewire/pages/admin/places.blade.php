@@ -48,7 +48,7 @@ new class extends Component {
                 </thead>
                 <tbody class="divide-y divide-gray-50">
                     @foreach($places as $place)
-                        <tr class="hover:bg-gray-50/50 transition">
+                        <tr wire:key="place-{{ $place->id }}" class="hover:bg-gray-50/50 transition">
                             <td class="px-4 py-3 font-bold text-gray-900">{{ $place->name }}</td>
                             <td class="px-4 py-3">
                                 <span class="text-[10px] px-2 py-0.5 rounded-full font-bold
