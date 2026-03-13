@@ -116,7 +116,7 @@
             @else
                 <div class="space-y-4">
                     @foreach($myPosts as $post)
-                        <a href="{{ route('posts.show', $post) }}" wire:navigate
+                        <a wire:key="post-{{ $post->id }}" href="{{ route('posts.show', $post) }}" wire:navigate
                            class="block bg-white rounded-xl shadow-sm border border-gray-100 p-4 active:scale-95 transition-transform text-right"
                            dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
                             <div class="flex justify-between items-start mb-2">
