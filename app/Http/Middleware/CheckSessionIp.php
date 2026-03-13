@@ -33,22 +33,45 @@ class CheckSessionIp
     }
 
     /**
-     * Check if two IPs are on the same /24 network.
+     * Check if two IPs are on the same /24 network (IPv4) or /64 network (IPv6).
      * This allows minor IP changes (DHCP renewal) while blocking
      * access from completely different networks.
      */
     private function isSameNetwork(string $ip1, string $ip2): bool
     {
-        $parts1 = explode('.', $ip1);
-        $parts2 = explode('.', $ip2);
-
-        if (count($parts1) < 3 || count($parts2) < 3) {
-            return false;
+        if ($ip1 === $ip2) {
+            return true;
         }
 
-        // Compare first 3 octets (same /24 subnet)
-        return $parts1[0] === $parts2[0]
-            && $parts1[1] === $parts2[1]
-            && $parts1[2] === $parts2[2];
+        if (str_contains($ip1, '.') && str_contains($ip2, '.')) {
+            $parts1 = explode('.', $ip1);
+            $parts2 = explode('.', $ip2);
+
+            if (count($parts1) < 3 || count($parts2) < 3) {
+                return false;
+            }
+
+            // Compare first 3 octets (same /24 subnet)
+            return $parts1[0] === $parts2[0]
+                && $parts1[1] === $parts2[1]
+                && $parts1[2] === $parts2[2];
+        }
+
+        if (str_contains($ip1, ':') && str_contains($ip2, ':')) {
+            $parts1 = explode(':', $ip1);
+            $parts2 = explode(':', $ip2);
+
+            if (count($parts1) < 4 || count($parts2) < 4) {
+                return false;
+            }
+
+            // Compare first 4 blocks (same /64 subnet)
+            return $parts1[0] === $parts2[0]
+                && $parts1[1] === $parts2[1]
+                && $parts1[2] === $parts2[2]
+                && $parts1[3] === $parts2[3];
+        }
+
+        return false;
     }
 }
