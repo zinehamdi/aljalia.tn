@@ -3,6 +3,7 @@
 use App\Models\User;
 use App\Models\Setting;
 use App\Mail\WelcomeNewUserMail;
+use App\Mail\WelcomeUserMail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -35,12 +36,16 @@ new #[Layout('layouts.guest')] class extends Component
         event(new Registered($user));
 
         try {
+            // Send welcome email to the user
+            Mail::to($user->email)->send(new WelcomeUserMail($user));
+
+            // Send notification to admin if configured
             $notifyEmail = Setting::where('key', 'new_user_notification_email')->value('value');
             if (!empty($notifyEmail)) {
                 Mail::to($notifyEmail)->send(new WelcomeNewUserMail($user));
             }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Failed to send new user email: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Failed to send emails on registration: ' . $e->getMessage());
         }
 
         Auth::login($user);
