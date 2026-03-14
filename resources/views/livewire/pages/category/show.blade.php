@@ -38,7 +38,12 @@ new class extends Component {
         $user = Auth::user();
 
         $query = Post::where('category_id', $this->category->id)
-            ->where('country_id', $user->country_id)
+            ->where(function($q) use ($user) {
+                $q->where('country_id', $user->country_id)
+                  ->orWhereHas('user', function($u) {
+                      $u->where('role', 'superadmin');
+                  });
+            })
             ->with(['user', 'city'])
             ->withCount([
                 'comments',

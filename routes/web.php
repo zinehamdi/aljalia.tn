@@ -71,6 +71,10 @@ Route::middleware(['auth'])->group(function () {
         Route::view('profile', 'profile')
             ->name('profile');
 
+        Volt::route('user/{user}', 'pages.user.show')
+            ->middleware(['verified'])
+            ->name('user.show');
+
     });
 
     // Admin Routes

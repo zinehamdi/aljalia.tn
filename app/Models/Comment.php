@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-    protected $fillable = ['user_id', 'post_id', 'content'];
+    protected $fillable = ['user_id', 'post_id', 'content', 'parent_id'];
 
     public function user()
     {
@@ -26,5 +26,15 @@ class Comment extends Model
     public function getScoreAttribute()
     {
         return $this->votes()->sum('value');
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'parent_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Comment::class, 'parent_id');
     }
 }

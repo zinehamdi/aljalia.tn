@@ -23,9 +23,14 @@ new class extends Component {
         $view->layout('layouts.app');
     }
 
+    public $replyingTo = null;
+    
+    #[Validate('required|min:2', as: 'reply content')]
+    public $replyContent = '';
+
     public function addComment()
     {
-        $this->validate();
+        $this->validate(['newComment' => 'required|min:2']);
 
         $this->post->comments()->create([
             'user_id' => Auth::id(),
@@ -33,7 +38,34 @@ new class extends Component {
         ]);
 
         $this->newComment = '';
-        $this->post->load('comments.user'); // Refresh comments
+        $this->post->load(['comments.user', 'comments.replies.user']); // Refresh comments
+    }
+
+    public function startReply($commentId)
+    {
+        $this->replyingTo = $commentId;
+        $this->replyContent = '';
+    }
+
+    public function cancelReply()
+    {
+        $this->replyingTo = null;
+        $this->replyContent = '';
+    }
+
+    public function addReply($commentId)
+    {
+        $this->validate(['replyContent' => 'required|min:2']);
+
+        $this->post->comments()->create([
+            'user_id' => Auth::id(),
+            'content' => $this->replyContent,
+            'parent_id' => $commentId,
+        ]);
+
+        $this->replyingTo = null;
+        $this->replyContent = '';
+        $this->post->load(['comments.user', 'comments.replies.user']); // Refresh
     }
 
     public function votePost($val)
@@ -226,7 +258,7 @@ new class extends Component {
             </h3>
 
             <div class="space-y-4 mb-6">
-                @forelse($post->comments as $comment)
+                @forelse($post->comments->where('parent_id', null) as $comment)
                     <div wire:key="comment-{{ $comment->id }}"
                         class="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex gap-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
                         @php
@@ -236,29 +268,61 @@ new class extends Component {
                             <button wire:click="voteComment({{ $comment->id }}, 1)"
                                 class="{{ $userCommentVote == 1 ? 'text-aljalia-red' : 'text-gray-400 hover:text-aljalia-red' }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5">
                                     </path>
                                 </svg>
                             </button>
                             <span class="text-xs font-bold text-gray-600 my-0.5">{{ $comment->score }}</span>
-                            <button wire:click="voteComment({{ $comment->id }}, -1)"
-                                class="{{ $userCommentVote == -1 ? 'text-blue-500' : 'text-gray-400 hover:text-blue-500' }}">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
                         </div>
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1">
-                                <span
-                                    class="font-bold text-sm text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ $comment->user->name }}</span>
+                                <a href="{{ route('user.show', $comment->user) }}" wire:navigate class="font-bold text-sm text-gray-900 hover:text-aljalia-red {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">
+                                    {{ $comment->user->name }}
+                                </a>
                                 <span class="text-[10px] text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
                             </div>
-                            <p
-                                class="text-sm text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} whitespace-pre-line leading-relaxed">
+                            <p class="text-sm text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} whitespace-pre-line leading-relaxed mb-2">
                                 {{ $comment->content }}
                             </p>
+                            
+                            <!-- Reply Button & Replies -->
+                            <div class="mt-2">
+                                <button wire:click="startReply({{ $comment->id }})" class="text-xs font-bold text-gray-500 hover:text-aljalia-red flex items-center gap-1 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                                    {{ __('Reply') }}
+                                </button>
+
+                                <!-- Reply Form -->
+                                @if($replyingTo == $comment->id)
+                                    <div class="mt-3 bg-white p-3 rounded-lg border border-gray-200">
+                                        <textarea wire:model="replyContent" rows="1" class="w-full text-sm rounded-md border-gray-300 {{ app()->getLocale() == 'ar' ? 'text-right font-arabic' : 'text-left' }} focus:ring-red-100 focus:border-red-300 mb-2" placeholder="{{ __('Write a reply...') }}"></textarea>
+                                        @error('replyContent') <span class="text-xs text-red-500 block mb-1">{{ $message }}</span> @enderror
+                                        <div class="flex justify-end gap-2">
+                                            <button wire:click="cancelReply" class="text-xs text-gray-500 font-bold px-3 py-1 bg-gray-100 rounded-md hover:bg-gray-200 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ __('Cancel') }}</button>
+                                            <button wire:click="addReply({{ $comment->id }})" class="text-xs text-white font-bold px-3 py-1 bg-aljalia-red rounded-md hover:bg-red-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ __('Reply') }}</button>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <!-- Nested Replies -->
+                                @if($comment->replies->count() > 0)
+                                    <div class="mt-3 {{ app()->getLocale() == 'ar' ? 'pr-4 border-r-2' : 'pl-4 border-l-2' }} border-gray-200 space-y-3">
+                                        @foreach($comment->replies as $reply)
+                                            <div wire:key="reply-{{ $reply->id }}">
+                                                <div class="flex items-center gap-2 mb-1">
+                                                    <a href="{{ route('user.show', $reply->user) }}" wire:navigate class="font-bold text-xs text-gray-900 hover:text-aljalia-red {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">
+                                                        {{ $reply->user->name }}
+                                                    </a>
+                                                    <span class="text-[9px] text-gray-500">{{ $reply->created_at->diffForHumans() }}</span>
+                                                </div>
+                                                <p class="text-xs text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} whitespace-pre-line">
+                                                    {{ $reply->content }}
+                                                </p>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @empty

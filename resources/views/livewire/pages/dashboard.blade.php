@@ -22,7 +22,12 @@ new class extends Component {
         $user = Auth::user();
         return [
             'user' => $user,
-            'recentPosts' => \App\Models\Post::where('country_id', $user->country_id)
+            'recentPosts' => \App\Models\Post::where(function($query) use ($user) {
+                    $query->where('country_id', $user->country_id)
+                          ->orWhereHas('user', function($q) {
+                              $q->where('role', 'superadmin');
+                          });
+                })
                 ->with(['user', 'city'])
                 ->latest()
                 ->take(5)
