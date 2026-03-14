@@ -130,8 +130,10 @@ new class extends Component {
                             @endif
                             <div class="{{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                                 <h4
-                                    class="font-bold text-sm text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight">
-                                    {{ $post->user->name }}
+                                    class="font-bold text-sm text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight z-10 relative">
+                                    <a href="{{ route('user.show', $post->user) }}" class="hover:text-aljalia-red" wire:navigate.stop>
+                                        {{ $post->user->name }}
+                                    </a>
                                 </h4>
                                 <span class="text-[10px] text-gray-500">{{ $post->created_at->diffForHumans() }}
                                     @if($post->city) • {{ $post->city->name }} @endif</span>
