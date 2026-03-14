@@ -6,10 +6,16 @@ use Livewire\Volt\Component;
 
 new class extends Component {
     public $categories = [];
+    public $perPage = 10;
 
     public function mount()
     {
         $this->categories = Category::where('is_active', true)->orderBy('order')->get();
+    }
+
+    public function loadMore()
+    {
+        $this->perPage += 10;
     }
 
     public function rendering($view)
@@ -20,18 +26,19 @@ new class extends Component {
     public function with()
     {
         $user = Auth::user();
+        $query = \App\Models\Post::where(function($query) use ($user) {
+                $query->where('country_id', $user->country_id)
+                      ->orWhereHas('user', function($q) {
+                          $q->where('role', 'superadmin');
+                      });
+            })
+            ->with(['user', 'city'])
+            ->latest();
+
         return [
             'user' => $user,
-            'recentPosts' => \App\Models\Post::where(function($query) use ($user) {
-                    $query->where('country_id', $user->country_id)
-                          ->orWhereHas('user', function($q) {
-                              $q->where('role', 'superadmin');
-                          });
-                })
-                ->with(['user', 'city'])
-                ->latest()
-                ->take(15)
-                ->get(),
+            'recentPosts' => $query->take($this->perPage)->get(),
+            'totalPosts' => $query->count(),
         ];
     }
 }; ?>
@@ -202,6 +209,19 @@ new class extends Component {
                     </div>
                 @endforeach
             </div>
+
+            @if($totalPosts > $perPage)
+                <div class="mt-6 flex justify-center">
+                    <button wire:click="loadMore" 
+                        class="bg-white text-aljalia-red border border-red-100 px-8 py-3 rounded-xl font-bold text-sm shadow-sm hover:bg-red-50 transition-colors flex items-center gap-2 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">
+                        <span wire:loading.remove wire:target="loadMore">{{ __('Show More') }}</span>
+                        <span wire:loading wire:target="loadMore">{{ __('Wait a moment...') }}</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+            @endif
         </div>
 
         <!-- Safety Warning -->
