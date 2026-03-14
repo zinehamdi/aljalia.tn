@@ -18,11 +18,13 @@
     <meta property="og:description" content="{{ __('Tunisians platform abroad, ask, answer, sell, buy... and meet your country brothers in your new neighborhood.') }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url('/') }}">
+    <meta property="og:image" content="{{ asset('social-logo.svg') }}">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="الجالية - Aljalia | {{ __('Aljalia.tn - Your guide and family abroad') }}">
     <meta name="twitter:description" content="{{ __('Tunisians platform abroad, ask, answer, sell, buy... and meet your country brothers in your new neighborhood.') }}">
+    <meta name="twitter:image" content="{{ asset('social-logo.svg') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
