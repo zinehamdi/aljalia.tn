@@ -30,7 +30,7 @@ new class extends Component {
                 })
                 ->with(['user', 'city'])
                 ->latest()
-                ->take(5)
+                ->take(15)
                 ->get(),
         ];
     }
