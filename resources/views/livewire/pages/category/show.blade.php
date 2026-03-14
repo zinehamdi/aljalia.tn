@@ -114,77 +114,83 @@ new class extends Component {
 
         <div class="space-y-3 px-4">
             @forelse($posts as $post)
-                <a wire:key="post-{{ $post->id }}" href="{{ route('posts.show', $post) }}" wire:navigate
-                    class="block bg-white rounded-xl shadow-sm border border-gray-100 p-4 active:scale-95 transition-transform {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}"
+                <div wire:key="post-{{ $post->id }}" 
+                    class="relative bg-white rounded-xl shadow-sm border border-gray-100 p-4 transition-all hover:shadow-md {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}"
                     dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="flex items-center gap-2">
-                            @if($post->user->avatar_url)
-                                <img src="{{ asset('storage/' . $post->user->avatar_url) }}"
-                                    class="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm shrink-0">
-                            @else
-                                <div
-                                    class="w-10 h-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center font-bold text-sm shrink-0 border border-gray-100">
-                                    {{ mb_substr($post->user->name, 0, 1) }}
+                    
+                    <!-- Invisible Full-Card Link (to post) -->
+                    <a href="{{ route('posts.show', $post) }}" wire:navigate class="absolute inset-0 z-0 rounded-xl"></a>
+
+                    <div class="relative z-10 pointer-events-none">
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="flex items-center gap-2">
+                                @if($post->user->avatar_url)
+                                    <img src="{{ asset('storage/' . $post->user->avatar_url) }}"
+                                        class="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm shrink-0">
+                                @else
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center font-bold text-sm shrink-0 border border-gray-100">
+                                        {{ mb_substr($post->user->name, 0, 1) }}
+                                    </div>
+                                @endif
+                                <div class="{{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                                    <h4
+                                        class="font-bold text-sm text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight pointer-events-auto">
+                                        <a href="{{ route('user.show', $post->user) }}" class="hover:text-aljalia-red relative z-20" wire:navigate>
+                                            {{ $post->user->name }}
+                                        </a>
+                                    </h4>
+                                    <span class="text-[10px] text-gray-500">{{ $post->created_at->diffForHumans() }}
+                                        @if($post->city) • {{ $post->city->name }} @endif</span>
                                 </div>
+                            </div>
+                            @if($post->type == 'guide')
+                                <span
+                                    class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ __('Guide') }}</span>
+                            @elseif($post->type == 'help')
+                                <span
+                                    class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ __('Help') }}</span>
+                            @elseif($post->type == 'esouq' || $post->type == 'marketplace')
+                                <span
+                                    class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ __('E-Souq') }}</span>
                             @endif
-                            <div class="{{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
-                                <h4
-                                    class="font-bold text-sm text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight z-10 relative">
-                                    <a href="{{ route('user.show', $post->user) }}" class="hover:text-aljalia-red" wire:navigate.stop>
-                                        {{ $post->user->name }}
-                                    </a>
-                                </h4>
-                                <span class="text-[10px] text-gray-500">{{ $post->created_at->diffForHumans() }}
-                                    @if($post->city) • {{ $post->city->name }} @endif</span>
+                        </div>
+
+                        <h3
+                            class="font-bold text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-1 leading-tight text-lg">
+                            {{ $post->title }}</h3>
+
+                        @if($post->image_url)
+                            <div class="my-3 rounded-xl overflow-hidden border border-gray-50 h-32 w-full">
+                                <img src="{{ asset('storage/' . $post->image_url) }}" class="w-full h-full object-cover">
+                            </div>
+                        @endif
+
+                        <p
+                            class="text-gray-600 text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} line-clamp-2 leading-relaxed opacity-90 mb-3">
+                            {{ $post->content }}
+                        </p>
+
+                        <div class="flex gap-4 text-gray-500 pb-1 border-t border-gray-50 pt-3 mt-1">
+                            <div class="flex items-center gap-1 text-xs font-bold text-aljalia-red">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5">
+                                    </path>
+                                </svg>
+                                {{ $post->score ?? 0 }}
+                            </div>
+                            <div class="flex items-center gap-1 text-xs">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                    </path>
+                                </svg>
+                                {{ $post->comments_count }}
                             </div>
                         </div>
-                        @if($post->type == 'guide')
-                            <span
-                                class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ __('Guide') }}</span>
-                        @elseif($post->type == 'help')
-                            <span
-                                class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ __('Help') }}</span>
-                        @elseif($post->type == 'esouq' || $post->type == 'marketplace')
-                            <span
-                                class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">{{ __('E-Souq') }}</span>
-                        @endif
                     </div>
-
-                    <h3
-                        class="font-bold text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-1 leading-tight text-lg">
-                        {{ $post->title }}</h3>
-
-                    @if($post->image_url)
-                        <div class="my-3 rounded-xl overflow-hidden border border-gray-50 h-32 w-full">
-                            <img src="{{ asset('storage/' . $post->image_url) }}" class="w-full h-full object-cover">
-                        </div>
-                    @endif
-
-                    <p
-                        class="text-gray-600 text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} line-clamp-2 leading-relaxed opacity-90 mb-3">
-                        {{ $post->content }}
-                    </p>
-
-                    <div class="flex gap-4 text-gray-500 pb-1 border-t border-gray-50 pt-3 mt-1">
-                        <div class="flex items-center gap-1 text-xs font-bold text-aljalia-red">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5">
-                                </path>
-                            </svg>
-                            {{ $post->score ?? 0 }}
-                        </div>
-                        <div class="flex items-center gap-1 text-xs">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
-                                </path>
-                            </svg>
-                            {{ $post->comments_count }}
-                        </div>
-                    </div>
-                </a>
+                </div>
             @empty
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center mt-4 mx-4">
                     <div class="text-4xl mb-4">👻</div>

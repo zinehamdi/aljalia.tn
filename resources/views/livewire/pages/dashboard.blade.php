@@ -152,48 +152,54 @@ new class extends Component {
 
             <div class="space-y-4">
                 @foreach($recentPosts as $post)
-                    <a wire:key="recent-post-{{ $post->id }}" href="{{ route('posts.show', $post) }}" wire:navigate
-                        class="block bg-white rounded-xl shadow-sm border border-gray-100 p-4 active:scale-95 transition-transform {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}"
+                    <div wire:key="recent-post-{{ $post->id }}" 
+                        class="relative bg-white rounded-xl shadow-sm border border-gray-100 p-4 transition-all hover:shadow-md {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}"
                         dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="flex items-center gap-2">
-                                @if($post->user->avatar_url)
-                                    <img src="{{ asset('storage/' . $post->user->avatar_url) }}"
-                                        class="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm shrink-0">
-                                @else
-                                    <div
-                                        class="w-10 h-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center font-bold text-sm shrink-0 border border-gray-100">
-                                        {{ mb_substr($post->user->name, 0, 1) }}
-                                    </div>
-                                @endif
-                                <div class="{{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
-                                    <h4 class="font-bold text-sm text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight z-10 relative">
-                                        <a href="{{ route('user.show', $post->user) }}" class="hover:text-aljalia-red" wire:navigate.stop>
-                                            {{ $post->user->name }}
-                                        </a>
-                                    </h4>
-                                    <span class="text-[10px] text-gray-500">{{ $post->created_at->diffForHumans() }}
-                                        @if($post->city) • {{ $post->city->name }} @endif</span>
-                                </div>
-                            </div>
-                            <span
-                                class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">
-                                {{ __(ucfirst($post->type)) }}
-                            </span>
-                        </div>
-
-                        <h3 class="font-bold text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-1 leading-tight text-lg">{{ $post->title }}</h3>
                         
-                        @if($post->image_url)
-                            <div class="my-3 rounded-xl overflow-hidden border border-gray-50 h-32 w-full">
-                                <img src="{{ asset('storage/' . $post->image_url) }}" class="w-full h-full object-cover">
-                            </div>
-                        @endif
+                        <!-- Invisible Full-Card Link (to post) -->
+                        <a href="{{ route('posts.show', $post) }}" wire:navigate class="absolute inset-0 z-0 rounded-xl"></a>
 
-                        <p class="text-gray-600 text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} line-clamp-2 leading-relaxed opacity-90">
-                            {{ $post->content }}
-                        </p>
-                    </a>
+                        <div class="relative z-10 pointer-events-none">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex items-center gap-2">
+                                    @if($post->user->avatar_url)
+                                        <img src="{{ asset('storage/' . $post->user->avatar_url) }}"
+                                            class="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm shrink-0">
+                                    @else
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center font-bold text-sm shrink-0 border border-gray-100">
+                                            {{ mb_substr($post->user->name, 0, 1) }}
+                                        </div>
+                                    @endif
+                                    <div class="{{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                                        <h4 class="font-bold text-sm text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight pointer-events-auto">
+                                            <a href="{{ route('user.show', $post->user) }}" class="hover:text-aljalia-red relative z-20" wire:navigate>
+                                                {{ $post->user->name }}
+                                            </a>
+                                        </h4>
+                                        <span class="text-[10px] text-gray-500">{{ $post->created_at->diffForHumans() }}
+                                            @if($post->city) • {{ $post->city->name }} @endif</span>
+                                    </div>
+                                </div>
+                                <span
+                                    class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }}">
+                                    {{ __(ucfirst($post->type)) }}
+                                </span>
+                            </div>
+
+                            <h3 class="font-bold text-gray-800 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} mb-1 leading-tight text-lg">{{ $post->title }}</h3>
+                            
+                            @if($post->image_url)
+                                <div class="my-3 rounded-xl overflow-hidden border border-gray-50 h-32 w-full">
+                                    <img src="{{ asset('storage/' . $post->image_url) }}" class="w-full h-full object-cover">
+                                </div>
+                            @endif
+
+                            <p class="text-gray-600 text-sm {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} line-clamp-2 leading-relaxed opacity-90">
+                                {{ $post->content }}
+                            </p>
+                        </div>
+                    </div>
                 @endforeach
             </div>
         </div>
