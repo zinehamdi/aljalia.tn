@@ -119,9 +119,9 @@ new class extends Component {
                     dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
                     
                     <!-- Invisible Full-Card Link (to post) -->
-                    <a href="{{ route('posts.show', $post) }}" wire:navigate class="absolute inset-0 z-0 rounded-xl"></a>
+                    <a href="{{ route('posts.show', $post) }}" wire:navigate class="absolute inset-0 z-10 rounded-xl"></a>
 
-                    <div class="relative z-10 pointer-events-none">
+                    <div class="relative z-0">
                         <div class="flex justify-between items-start mb-2">
                             <div class="flex items-center gap-2">
                                 @if($post->user->avatar_url)
@@ -135,7 +135,7 @@ new class extends Component {
                                 @endif
                                 <div class="{{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                                     <h4
-                                        class="font-bold text-sm text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight pointer-events-auto">
+                                        class="font-bold text-sm text-gray-900 {{ app()->getLocale() == 'ar' ? 'font-arabic' : '' }} leading-tight">
                                         <a href="{{ route('user.show', $post->user) }}" class="hover:text-aljalia-red relative z-20" wire:navigate>
                                             {{ $post->user->name }}
                                         </a>
